@@ -1,0 +1,90 @@
+vpn:
+  alarm: True # True or False
+  request:
+    # info_path: https://aaa.xyz/api/v1/user/info  # 请求地址
+    # info_headers:                                # 请求头,详细见README.md
+    #   authority: 
+    #   method: 
+    #   path: 
+    #   scheme: 
+    #   accept: 
+    #   accept-encoding: 
+    #   accept-language: 
+    #   authorization: 
+    #   content-language: 
+    #   referer: 
+    #   sec-ch-ua: 
+    #   sec-ch-ua-mobile: 
+    #   sec-ch-ua-platform: 
+    #   sec-fetch-dest: 
+    #   sec-fetch-mode: 
+    #   sec-fetch-site: 
+
+    # getSubscribe_path: https://aaa.xyz/api/v1/user/getSubscribe     # 请求地址
+    # getSubscribe_heasers:
+    #   authority: 
+    #   method: 
+    #   path: 
+    #   scheme: 
+    #   accept: 
+    #   accept-encoding: 
+    #   accept-language: 
+    #   authorization: 
+    #   content-language: 
+    #   referer: 
+    #   sec-ch-ua: 
+    #   sec-ch-ua-mobile: 
+    #   sec-ch-ua-platform: 
+    #   sec-fetch-dest: 
+    #   sec-fetch-mode: 
+    #   sec-fetch-site: 
+
+
+messages:
+  vpn_all: |
+    f"""vpn信息如下：
+    账户邮箱：{data_vpn['email']}
+    账户创建日期：{time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(data_vpn['created_at']))}
+    封禁状态：{data_vpn['banned']==1}
+    套餐总流量：{float(data_vpn['transfer_enable'])/(1024*1024*1024)}GB
+    套餐到期日期：{time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(data_vpn['expired_at']))}
+    剩余重置天数：{data_vpn2['reset_day']}天
+    过去20分钟流量量：{twentyu/(1024**3)}GB
+    过去24小时已用流量：{float(data_vpn2['u'])/(1024*1024*1024)}GB
+    已用流量：{(float(data_vpn2['u'])+float(data_vpn2['d']))/(1024*1024*1024)}GB
+    剩余流量：{float(data_vpn['transfer_enable'])/(1024*1024*1024)-(float(data_vpn2['u'])+float(data_vpn2['d']))/(1024*1024*1024)}GB
+    vpn报警：{config['vpn']['alarm']}
+    套餐明细：
+    {data_vpn2['plan']['name']}
+    创建于：{time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(data_vpn2['plan']['created_at']))}
+    更新于：{time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(data_vpn2['plan']['updated_at']))}
+    总流量：{data_vpn2['plan']['transfer_enable']}GB
+    限速：{data_vpn2['plan']['speed_limit']}
+    {ran}租金：{money}元
+    重置金额：{float(data_vpn2['plan']['reset_price'])/100}元
+    套餐介绍：
+    {BeautifulSoup(data_vpn2['plan']['content'], 'lxml').get_text()}"""
+
+  vpn_short: |
+    f"""vpn简报如下：
+    套餐总流量：{float(data_vpn['transfer_enable'])/(1024*1024*1024):.3f}GB
+    剩余重置天数：{data_vpn2['reset_day']}天
+    过去20分钟流量量：{twentyu/(1024**3)}GB
+    过去24小时已用流量：{float(data_vpn2['u'])/(1024*1024*1024):.3f}GB
+    已用流量：{(float(data_vpn2['u'])+float(data_vpn2['d']))/(1024*1024*1024):.3f}GB
+    剩余流量：{float(data_vpn['transfer_enable'])/(1024*1024*1024)-(float(data_vpn2['u'])+float(data_vpn2['d']))/(1024*1024*1024):.3f}GB
+    vpn报警：{config['vpn']['alarm']}"""
+
+  vpn_everyday_alarm: |
+    f'⚠报警：今日流量使用已超过20GB⚠\n\
+    ⚠报警：今日流量使用已超过20GB⚠\n\
+    ⚠报警：今日流量使用已超过20GB⚠\n\
+    ⚠报警：今日流量使用已超过20GB⚠\n\
+    当前已用：{twentyu/(1024*1024*1024)}GB'
+
+  vpn_twentyu_alarm: |
+    f'⚠报警：过去二十分钟流量使用量超过5GB⚠\n\
+    ⚠报警：过去二十分钟流量使用量超过5GB⚠\n\
+    ⚠报警：过去二十分钟流量使用量超过5GB⚠\n\
+    ⚠报警：过去二十分钟流量使用量超过5GB⚠\n\
+    过去二十分钟已用：{twentyu/(1024*1024*1024)}GB'
