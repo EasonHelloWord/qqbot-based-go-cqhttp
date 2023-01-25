@@ -1,5 +1,6 @@
 vpn:
   alarm: True # True or False
+  # alarm_group: # vpn报警qq群号
   request:
     # info_path: https://aaa.xyz/api/v1/user/info  # 请求地址
     # info_headers:                                # 请求头,详细见README.md

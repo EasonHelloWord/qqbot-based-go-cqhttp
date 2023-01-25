@@ -91,7 +91,7 @@ def vpn_alarm():
             u = data_vpn['u']
             if alarm_day:
                 if u >= 21474836480:  # 21474836480
-                    data = {'group_id': 795856478,
+                    data = {'group_id': config['vpn']['alarm_group'],
                             'message': eval(config['messages']['vpn_everyday_alarm'])
                             }
                     send("send_group_msg", data)
@@ -99,7 +99,7 @@ def vpn_alarm():
             if last_u:
                 twentyu = u - last_u
                 if twentyu >= 5368709120:  # 5368709120
-                    data = {'group_id': 795856478,
+                    data = {'group_id': config['vpn']['alarm_group'],
                             'message': eval(config['messages']['vpn_twentyu_alarm'])}
                     send("send_group_msg", data)
                 last_u = u
