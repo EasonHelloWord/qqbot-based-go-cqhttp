@@ -33,9 +33,11 @@ def send(URL, data):
 
 
 def vpn(data):
-    data_vpn = json.loads(requests.get(config['vpn']['request']['info_path'], headers=config['vpn']['request']['info_headers']).text)['data']
+    data_vpn = json.loads(requests.get(
+        config['vpn']['request']['info_path'], headers=config['vpn']['request']['info_headers']).text)['data']
 
-    data_vpn2 = json.loads(requests.get(config['vpn']['request']['getSubscribe_path'], headers=config['vpn']['request']['getSubscribe_heasers']).text)['data']
+    data_vpn2 = json.loads(requests.get(config['vpn']['request']['getSubscribe_path'],
+                           headers=config['vpn']['request']['getSubscribe_heasers']).text)['data']
 
     if data_vpn2['plan']['month_price']:
         ran = "月"
@@ -65,11 +67,11 @@ def vpn(data):
         ran = "单次"
 
     if data['message'] == 'vpn_all':
-            mes = eval(config['messages']['vpn_all'])
-
+        mes = eval(config['messages']['vpn_all'])
 
     if data['message'] == 'vpn':
-        mes = eval(config['message']['vpn_short'])
+        mes = eval(config['messages']['vpn_short'])
+
     if data['message_type'] == 'group':
         data = {'group_id': f'{data["group_id"]}',
                 'message': f'{mes}'
@@ -82,12 +84,14 @@ def vpn(data):
                 }
         send("send_private_msg", data)
 
+
 def vpn_alarm():
     if config['vpn']['alarm'] and config['vpn']['attitude']:
         last_u = False
         alarm_day = True
         while True:
-            data_vpn = json.loads(requests.get(config['vpn']['request']['getSubscribe_path'], headers=config['vpn']['request']['getSubscribe_heasers']).text)['data']
+            data_vpn = json.loads(requests.get(
+                config['vpn']['request']['getSubscribe_path'], headers=config['vpn']['request']['getSubscribe_heasers']).text)['data']
             u = data_vpn['u']
             if alarm_day:
                 if u >= 21474836480:  # 21474836480
@@ -110,9 +114,10 @@ if __name__ == '__main__':
     global twentyu, config
     twentyu = 0
     if not os.path.exists('config.yml'):
-        shutil.copy('config_backup.yml','config.yml')
+        shutil.copy('config_backup.yml', 'config.yml')
         print('配置文件创建完成')
         input("按回车继续")
     config = yaml.safe_load(open("./config.yml", 'r', encoding='utf-8'))
     threading.Thread(target=vpn_alarm).start()
-    app.run(config['config']["receive_address"], config['config']["receive_port"], False)
+    app.run(config['config']["receive_address"],
+            config['config']["receive_port"], False)

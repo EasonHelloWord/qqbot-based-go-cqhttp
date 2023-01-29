@@ -10,42 +10,41 @@ vpn:
   request:
     # info_path: https://aaa.xyz/api/v1/user/info  # 请求地址
     # info_headers:                                # 请求头,详细见README.md
-    #   authority: 
-    #   method: 
-    #   path: 
-    #   scheme: 
-    #   accept: 
-    #   accept-encoding: 
-    #   accept-language: 
-    #   authorization: 
-    #   content-language: 
-    #   referer: 
-    #   sec-ch-ua: 
-    #   sec-ch-ua-mobile: 
-    #   sec-ch-ua-platform: 
-    #   sec-fetch-dest: 
-    #   sec-fetch-mode: 
-    #   sec-fetch-site: 
+    #   authority:
+    #   method:
+    #   path:
+    #   scheme:
+    #   accept:
+    #   accept-encoding:
+    #   accept-language:
+    #   authorization:
+    #   content-language:
+    #   referer:
+    #   sec-ch-ua:
+    #   sec-ch-ua-mobile:
+    #   sec-ch-ua-platform:
+    #   sec-fetch-dest:
+    #   sec-fetch-mode:
+    #   sec-fetch-site:
 
     # getSubscribe_path: https://aaa.xyz/api/v1/user/getSubscribe     # 请求地址
     # getSubscribe_heasers:
-    #   authority: 
-    #   method: 
-    #   path: 
-    #   scheme: 
-    #   accept: 
-    #   accept-encoding: 
-    #   accept-language: 
-    #   authorization: 
-    #   content-language: 
-    #   referer: 
-    #   sec-ch-ua: 
-    #   sec-ch-ua-mobile: 
-    #   sec-ch-ua-platform: 
-    #   sec-fetch-dest: 
-    #   sec-fetch-mode: 
-    #   sec-fetch-site: 
-
+    #   authority:
+    #   method:
+    #   path:
+    #   scheme:
+    #   accept:
+    #   accept-encoding:
+    #   accept-language:
+    #   authorization:
+    #   content-language:
+    #   referer:
+    #   sec-ch-ua:
+    #   sec-ch-ua-mobile:
+    #   sec-ch-ua-platform:
+    #   sec-fetch-dest:
+    #   sec-fetch-mode:
+    #   sec-fetch-site:
 
 messages:
   vpn_all: |
