@@ -30,4 +30,4 @@ qbot基于[go-cqhttp](https://github.com/Mrs4s/go-cqhttp)的qq机器人
 如果这里没东西刷新一下网页就好了。  
 3.4、记录info与getSubscribe的请求网址和响应标头，分别填入config.yml中的vpn中request:info_path、info_headers、getSubscribe_path、getSubscribe_heasers  
 3.5、请保证config.yml中的vpn能每一项都填写完整没有注释掉的项目。  
-3.6、至此配置完毕，向机器人qq发送.vpn或.vpn_all测试。  啊
+3.6、至此配置完毕，向机器人qq发送.vpn或.vpn_all测试。  
