@@ -1,4 +1,10 @@
+config:
+  send_address: http://127.0.0.1:5700/
+  receive_address: 127.0.0.1
+  receive_port: 5701
+
 vpn:
+  attitude: False #是否启用vpn功能
   alarm: True # True or False
   # alarm_group: # vpn报警qq群号
   request:

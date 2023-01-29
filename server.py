@@ -23,13 +23,13 @@ def receive(data):
     if data.get('message')[0] == ".":
         data['message'] = data['message'][1:]
         # print(data)
-        if data['message'] == "vpn" or data['message'] == "vpn_all":
+        if config['vpn']['attitude'] and (data['message'] == "vpn" or data['message'] == "vpn_all"):
             vpn(data)
 
 
 def send(URL, data):
     print('send')
-    requests.post(f"http://127.0.0.1:5700/{URL}", data)
+    requests.post(f"{config['config']['send_address']}{URL}", data)
 
 
 def vpn(data):
@@ -83,7 +83,7 @@ def vpn(data):
         send("send_private_msg", data)
 
 def vpn_alarm():
-    if config['vpn']['alarm']:
+    if config['vpn']['alarm'] and config['vpn']['attitude']:
         last_u = False
         alarm_day = True
         while True:
@@ -111,6 +111,8 @@ if __name__ == '__main__':
     twentyu = 0
     if not os.path.exists('config.yml'):
         shutil.copy('config_backup.yml','config.yml')
+        print('配置文件创建完成')
+        input("按回车继续")
     config = yaml.safe_load(open("./config.yml", 'r', encoding='utf-8'))
     threading.Thread(target=vpn_alarm).start()
-    app.run('127.0.0.1', 5701, False)
+    app.run(config['config']["receive_address"], config['config']["receive_port"], False)
