@@ -17,7 +17,7 @@ qbot基于[go-cqhttp](https://github.com/Mrs4s/go-cqhttp)的qq机器人
   
 ### 2、启动qqbot
 2.1、下载本仓库的[release](https://github.com/EasonHelloWord/qqbot-based-go-cqhttp/releases)并解压  
-2.2、运行server.py  
+2.2、运行可执行文件
 2.3、打开生成的config.yml而不是config_backup.yml配置服务器地址和端口与cq-http同步  
 2.5、至此服务启动完毕
 
