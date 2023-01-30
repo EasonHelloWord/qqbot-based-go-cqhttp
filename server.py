@@ -25,6 +25,18 @@ def receive(data):
         # print(data)
         if config['vpn']['attitude'] and (data['message'] == "vpn" or data['message'] == "vpn_all"):
             vpn(data)
+        else:
+            if data['message_type'] == 'group':
+                data = {'group_id': f'{data["group_id"]}',
+                        'message': f'{config["messages"]["vpn_off"]}'
+                        }
+                send("send_group_msg", data)
+
+            if data['message_type'] == 'private':
+                data = {'user_id': f'{data["user_id"]}',
+                        'message': f'{config["messages"]["vpn_off"]}'
+                        }
+                send("send_private_msg", data)
 
 
 def send(URL, data):

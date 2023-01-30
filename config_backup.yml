@@ -47,6 +47,7 @@ vpn:
     #   sec-fetch-site:
 
 messages:
+  vpn_off: vpn查询功能未启用
   vpn_all: |
     f"""vpn信息如下：
     账户邮箱：{data_vpn['email']}
