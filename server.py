@@ -14,7 +14,6 @@ app = Flask(__name__)
 @app.route('/', methods=["POST"])
 def post_data():
     data = request.get_json()
-    print(data['post_type'])
     if data['post_type'] != 'meta_event':
         if data['post_type'] == 'message':
             receive(data)
