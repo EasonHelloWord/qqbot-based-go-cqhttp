@@ -26,22 +26,29 @@ def receive(data):
         if config['vpn']['attitude'] and (data['message'] == "vpn" or data['message'] == "vpn_all"):
             vpn(data)
         else:
-            if data['message_type'] == 'group':
-                data = {'group_id': f'{data["group_id"]}',
-                        'message': f'{config["messages"]["vpn_off"]}'
-                        }
-                send("send_group_msg", data)
-
-            if data['message_type'] == 'private':
-                data = {'user_id': f'{data["user_id"]}',
-                        'message': f'{config["messages"]["vpn_off"]}'
-                        }
-                send("send_private_msg", data)
+            mes = config['messages']['vpn_off']
+            send_new(data, mes)
 
 
 def send(URL, data):
     print('send')
     requests.post(f"{config['config']['send_address']}{URL}", data)
+
+
+def send_new(datas, mes):
+    if datas['message_type'] == 'group':
+        data = {'group_id': f'{datas["group_id"]}',
+                'message': f'{mes}'
+                }
+        requests.post(
+            f"{config['config']['send_address']}send_group_msg", data)
+
+    if datas['message_type'] == 'private':
+        data = {'user_id': f'{datas["user_id"]}',
+                'message': f'{mes}'
+                }
+        requests.post(
+            f"{config['config']['send_address']}send_private_msg", data)
 
 
 def vpn(data):
@@ -84,17 +91,7 @@ def vpn(data):
     if data['message'] == 'vpn':
         mes = eval(config['messages']['vpn_short'])
 
-    if data['message_type'] == 'group':
-        data = {'group_id': f'{data["group_id"]}',
-                'message': f'{mes}'
-                }
-        send("send_group_msg", data)
-
-    if data['message_type'] == 'private':
-        data = {'user_id': f'{data["user_id"]}',
-                'message': f'{mes}'
-                }
-        send("send_private_msg", data)
+    send_new(data, mes)
 
 
 def vpn_alarm():
@@ -131,6 +128,6 @@ if __name__ == '__main__':
         print('配置文件创建完成')
         input("按回车继续")
     config = yaml.safe_load(open("./config.yml", 'r', encoding='utf-8'))
-    threading.Thread(target=vpn_alarm).start()  
+    threading.Thread(target=vpn_alarm).start()
     app.run(config['config']["receive_address"],
             config['config']["receive_port"], False)
