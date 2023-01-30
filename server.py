@@ -7,15 +7,18 @@ import threading
 import yaml
 import shutil
 import os
+import datetime
 app = Flask(__name__)
 
 
 @app.route('/', methods=["POST"])
 def post_data():
     data = request.get_json()
-    # print(data)
-    if data.get('post_type') == 'message':
-        receive(data)
+    print(data['post_type'])
+    if data['post_type'] != 'meta_event':
+        if data['post_type'] == 'message':
+            receive(data)
+        log(f"[post_receive] {data}")
     return ('200')
 
 
@@ -23,32 +26,42 @@ def receive(data):
     if data.get('message')[0] == ".":
         data['message'] = data['message'][1:]
         # print(data)
-        if config['vpn']['attitude'] and (data['message'] == "vpn" or data['message'] == "vpn_all"):
-            vpn(data)
-        else:
-            mes = config['messages']['vpn_off']
-            send_new(data, mes)
+        if  data['message'] == "vpn" or data['message'] == "vpn_all":    
+            if config['vpn']['attitude']:
+                vpn(data)
+            else:
+                mes = config['messages']['vpn_off']
+                send_new(data, mes)
+
+def log(mes,out=True,write=True,type='info'):
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+    mes = f'[{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}] [{type}] {mes}'
+    if write:
+        open(f'./logs/{time.strftime("%Y-%m-%d.txt",time.localtime())}','a',encoding='utf-8').write(f'{mes}\n')
+    if out:
+        print(mes)
 
 
 def send(URL, data):
-    print('send')
     requests.post(f"{config['config']['send_address']}{URL}", data)
-
+    log(f"[post_send] {config['config']['send_address']}{URL} {data}")
 
 def send_new(datas, mes):
     if datas['message_type'] == 'group':
+        url = f"{config['config']['send_address']}send_group_msg"
         data = {'group_id': f'{datas["group_id"]}',
                 'message': f'{mes}'
                 }
-        requests.post(
-            f"{config['config']['send_address']}send_group_msg", data)
+        requests.post(url, data)
 
     if datas['message_type'] == 'private':
+        url = f"{config['config']['send_address']}send_private_msg"
         data = {'user_id': f'{datas["user_id"]}',
                 'message': f'{mes}'
                 }
-        requests.post(
-            f"{config['config']['send_address']}send_private_msg", data)
+        requests.post(url, data)
+    log(f"[post_send] {url} {data}")
 
 
 def vpn(data):
@@ -100,6 +113,7 @@ def vpn_alarm():
         last_u = False
         alarm_day = True
         while True:
+            log('请求vpn数据')
             data_vpn = json.loads(requests.get(
                 config['vpn']['request']['getSubscribe_path'], headers=config['vpn']['request']['getSubscribe_heasers']).text)['data']
             u = data_vpn['u']
@@ -125,7 +139,7 @@ if __name__ == '__main__':
     twentyu = 0
     if not os.path.exists('config.yml'):
         shutil.copy('config_backup.yml', 'config.yml')
-        print('配置文件创建完成')
+        log('配置文件创建完成')
         input("按回车继续")
     config = yaml.safe_load(open("./config.yml", 'r', encoding='utf-8'))
     threading.Thread(target=vpn_alarm).start()
