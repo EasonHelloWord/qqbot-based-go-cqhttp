@@ -95,7 +95,7 @@ def vpn(data):
 
 
 def vpn_alarm():
-    if config['vpn']['alarm'] and config['vpn']['attitude']:
+    if config['vpn']['attitude']:
         global twentyu
         last_u = False
         alarm_day = True
@@ -103,7 +103,7 @@ def vpn_alarm():
             data_vpn = json.loads(requests.get(
                 config['vpn']['request']['getSubscribe_path'], headers=config['vpn']['request']['getSubscribe_heasers']).text)['data']
             u = data_vpn['u']
-            if alarm_day:
+            if config['vpn']['alarm'] and alarm_day:
                 if u >= 21474836480:  # 21474836480
                     data = {'group_id': config['vpn']['alarm_group'],
                             'message': eval(config['messages']['vpn_everyday_alarm'])
@@ -112,12 +112,12 @@ def vpn_alarm():
                     alarm_day = False
             if last_u:
                 twentyu = u - last_u
-                if twentyu >= 5368709120:  # 5368709120
+                if config['vpn']['alarm'] and twentyu >= 5368709120:  # 5368709120
                     data = {'group_id': config['vpn']['alarm_group'],
                             'message': eval(config['messages']['vpn_twentyu_alarm'])}
                     send("send_group_msg", data)
-                last_u = u
-            time.sleep(1200)
+            last_u = u
+            time.sleep(1200)#1200
 
 
 if __name__ == '__main__':
