@@ -87,6 +87,7 @@ def vpn(data):
 
 def vpn_alarm():
     if config['vpn']['alarm'] and config['vpn']['attitude']:
+        global twentyu
         last_u = False
         alarm_day = True
         while True:
@@ -118,6 +119,6 @@ if __name__ == '__main__':
         print('配置文件创建完成')
         input("按回车继续")
     config = yaml.safe_load(open("./config.yml", 'r', encoding='utf-8'))
-    threading.Thread(target=vpn_alarm).start()
+    threading.Thread(target=vpn_alarm).start()  
     app.run(config['config']["receive_address"],
             config['config']["receive_port"], False)
