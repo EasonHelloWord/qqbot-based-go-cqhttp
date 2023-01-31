@@ -1,5 +1,6 @@
 import json
 import time
+import traceback
 from flask import Flask, request
 import requests
 from bs4 import BeautifulSoup
@@ -38,10 +39,12 @@ def log(mes, out=True, write=True, type='info'):
         os.makedirs('logs')
     mes = f'[{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}] [{type}] {mes}'
     if write:
-        open(f'./logs/{time.strftime("%Y-%m-%d.txt",time.localtime())}',
+        open(f'./logs/{time.strftime(f"%Y-%m-%d.{os.getpid()}.txt",time.localtime())}',
              'a', encoding='utf-8').write(f'{mes}\n')
     if out:
         print(mes)
+    if type == 'error':
+        os._exit(2)
 
 
 def send(URL, data):
@@ -73,17 +76,15 @@ def vpn(data):
     data_vpn2 = json.loads(requests.get(config['vpn']['request']['getSubscribe_path'],
                            headers=config['vpn']['request']['getSubscribe_heasers']).text)['data']
 
-
-
     if data['message'] == 'vpn_all':
         price_plans = [
-        ("月", "month_price"),
-        ("季", "quarter_price"),
-        ("半年", "half_year_price"),
-        ("年", "year_price"),
-        ("两年", "two_year_price"),
-        ("三年", "three_year_price"),
-        ("单次", "onetime_price"),
+            ("月", "month_price"),
+            ("季", "quarter_price"),
+            ("半年", "half_year_price"),
+            ("年", "year_price"),
+            ("两年", "two_year_price"),
+            ("三年", "three_year_price"),
+            ("单次", "onetime_price"),
         ]
         for ran, price_plan in price_plans:
             if data_vpn2['plan'][price_plan]:
@@ -125,14 +126,24 @@ def vpn_alarm():
 
 
 if __name__ == '__main__':
-    log('===============程序启动===================')
+    log('===================程序启动===================')
     global twentyu, config
     twentyu = 0
     if not os.path.exists('config.yml'):
-        shutil.copy('config_backup.yml', 'config.yml')
+        log('未检测到配置，将重新生成配置文件。', type='warn')
+        try:
+            shutil.copy('config_backup.yml', 'config.yml')
+        except:
+            log(traceback.format_exc(),type='error')
         log('配置文件创建完成')
         input("按回车继续")
-    config = yaml.safe_load(open("./config.yml", 'r', encoding='utf-8'))
+    log('===================读取配置===================')
+    try:
+        config = yaml.load(open("./config.yml", 'r', encoding='utf-8'))
+    except:
+        log(traceback.format_exc(),type='error')
+    else:
+        log('successful!')
     threading.Thread(target=vpn_alarm).start()
     app.run(config['config']["receive_address"],
             config['config']["receive_port"], False)
