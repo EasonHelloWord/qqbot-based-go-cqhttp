@@ -125,6 +125,7 @@ def vpn_alarm():
 
 
 if __name__ == '__main__':
+    log('===============程序启动===================')
     global twentyu, config
     twentyu = 0
     if not os.path.exists('config.yml'):
