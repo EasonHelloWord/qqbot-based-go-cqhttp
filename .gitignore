@@ -1,6 +1,7 @@
 config.yml
-text/
+test/
 logs/
+bill/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
