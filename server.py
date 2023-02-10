@@ -55,7 +55,7 @@ def receive(data):
                         mes = '[error] 参数不足'
                     else:
                         datas = {
-                            'topic': message[3], 'in': message[4], 'out': message[5], 'note': message[6]}
+                            'topic': message[3], 'in': int(message[4]), 'out': int(message[5]), 'note': message[6]}
                         mes = bills.add(datas, data['user_id'])
                 if message[2] == 'remove':
                     try:
@@ -133,8 +133,15 @@ class Bill:
             mes = f"{mes}{id}  {state}  {this_data['topic']}  {this_data['in']}  {this_data['out']}  {this_data['all']}  {this_data['note']}  {time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(this_data['add_time']))}  {this_data['user_id']}"
         else:
             mes = f"{self.name}:\nID  状态  标题  收入  支出  总计  备注  时间\n"
+            in_toatal = 0
+            out_toatal =0
+            toatal = 0
             for id, this_data in self.data['main'].items():
                 mes = f"{mes}{id}  正常  {this_data['topic']}  {this_data['in']}  {this_data['out']}  {this_data['all']}  {this_data['note']}  {time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(this_data['add_time']))}\n"
+                in_toatal = in_toatal+int(this_data['in'])
+                out_toatal = out_toatal+int(this_data['out'])
+                toatal = toatal+int(this_data['all'])
+            mes = f"{mes}小结  无  无  {in_toatal}  {out_toatal}  {toatal}  无  无  无\n"
             for id, this_data in self.data['backup'].items():
                 mes = f"{mes}{id}  挂起  {this_data['topic']}  {this_data['in']}  {this_data['out']}  {this_data['all']}  {this_data['note']}  {time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(this_data['add_time']))}\n"
         return (mes)
